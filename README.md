@@ -59,4 +59,15 @@ ETH: 0x6C4ca3eb96647F9bA7109B6c6b277e483abe02cB
 
 ### Best Practices
 
-By default, most people on AWS never make it out of the default VPC that gets created with each new AWS account.
+By default, most people on AWS never make it out of the default VPC that gets created with each new AWS account. This project offers a superior and more secure configuration using multiple VPCs and Transit Gateways for isolation of concerns. What does this mean?
+
+0. The default VPC is not used for anything beyond AWS account defaults. That means it has no access to the internet or the other VPCs that you create.
+1. There is a single Web gateway VPC with Internet Gateway - the only way to receive traffic for your private cloud.
+2. The Database VPC(s) house your databases, meaning only production applications can connect to the Database VPC for security 
+3. Other VPCs exist to house your applications - they communicate to other AWS assets using the default Transit Gateway. They use NAT to exit via **VPC_Web** Internet Gateway 
+4. Connect via Wireguard VPN to the second Transit Gateway. If you need to conduct database maintenance, alter the routing table to give yourself access to only the specific database(s) you are working on. By default, there is no SSH access to any EC2 instances in production.
+5. Choose whatever load balancer configuration you are most comfortable with. Some recommend one LB per ECS service, others choose to save on costs by sharing a single LB with many services.
+6. Either way, your load balancers act as DNS resolvers and SSL/TLS terminators. All ECS services are configured to use TLS certificates in the default configuration. 
+7. By default, network ACLs and security groups follow the "least privilege" approach to security. That means that by default the cloud discards all traffic behind **VPC_Web**. In addition, **VPC_Database** only exposes required database ports (eg. 5432 for PostgreSQL databases). To access the production data tier, you will need to modify the network ACL and security group associated with the given subnet which houses the database. This means that a compromise of web-facing assets in the web tier does not lead to a compromise of customer data.
+8. For additional security, feel free to disable the VPN attachment and/or VPN transit gateway when not in use.
+ 
