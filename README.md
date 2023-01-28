@@ -26,4 +26,21 @@ ETH: 0x6C4ca3eb96647F9bA7109B6c6b277e483abe02cB
 9. S3 to store Terraform state and web assets.
 10. CloudFront: CDN support for web assets.
 11. DNS: Route53 availability for VPCs, load balancers, subnets, and ECS.
-12. 
+12. Databases (RDS) with read-only replicas and disk encryption:
+    1. PostgreSQL
+    2. MySQL/MariaDB
+    3. MongoDB
+    4. OracleDB
+    5. MSSQL
+13. Docker: Sample Dockerfiles with multi-CPU architecture support (x86 and ARM), compatible with latest MacBook Pros and AWS Graviton processors. Sample files for:
+    1. React + SASS + Typescript app
+    2. Database schema using JavaScript + Knex
+    3. Python Flask and Django apps
+    4. Ruby on Rails API
+    5. Rust API server
+    6. Rust to Web Assembly (WASM) app
+    7. Go API server
+14. Secrets Manager: Securely store app credentials and secrets. Single library supporting your choice of language/app runtime out of the box.
+
+
+    
