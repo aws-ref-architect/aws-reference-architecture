@@ -19,10 +19,10 @@ ETH: 0x6C4ca3eb96647F9bA7109B6c6b277e483abe02cB
 6. Subnets (default to 3 per VPC).
 7. Security: Security groups, network ACLs, multi-VPC architecture including separate Web and Database tiers.
 8. Elastic Container Service (ECS):
-  1. EC2 Clusters
-  2. Services
-  3. Task definitions
-  4. ECR for Docker payloads
+    1. EC2 Clusters
+    2. Services
+    3. Task definitions
+    4. ECR for Docker payloads
 9. S3 to store Terraform state and web assets.
 10. CloudFront: CDN support for web assets.
 11. DNS: Route53 availability for VPCs, load balancers, subnets, and ECS.
