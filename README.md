@@ -72,4 +72,26 @@ By default, most people on AWS never make it out of the default VPC that gets cr
 6. Either way, your load balancers act as DNS resolvers and SSL/TLS terminators. All ECS services are configured to use TLS certificates in the default configuration. 
 7. By default, network ACLs and security groups follow the "least privilege" approach to security. That means that by default the cloud discards all traffic behind **VPC_Web**. In addition, **VPC_Database** only exposes required database ports (eg. 5432 for PostgreSQL databases). To access the production data tier, you will need to modify the network ACL and security group associated with the given subnet which houses the database. This means that a compromise of web-facing assets in the web tier does not lead to a compromise of customer data.
 8. For additional security, feel free to disable the VPN attachment and/or VPN transit gateway when not in use.
- 
+
+## Setup
+
+1. Install `tfenv` to manage Terraform version:
+
+`$ git clone --depth=1 https://github.com/tfutils/tfenv.git ~/.tfenv`
+`$ echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.bash_profile`
+`$ source ~/.bash_profile`
+`$ tfenv install && tfenv use` 
+`$ ln -s ~/.tfenv/bin/* /usr/local/bin && source ~/.bash_profile`
+
+2. Install `LocalStack` and `TerraformLocal` for speedy AWS cloud mocks (nearly 100% feature support):
+
+`$ apt-get install python3`
+`$ python -m pip install --upgrade pip`
+`$ python -m pip install localstack && localstack update`
+`$ python -m pip install terraform-local`
+`$ cd terraform-test`
+`$ localstack start`
+`$ tflocal init`
+`$ terraform validate && terraform fmt`
+`$ tflocal plan`
+`$ tflocal apply`
