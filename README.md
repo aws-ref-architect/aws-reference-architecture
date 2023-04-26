@@ -8,6 +8,23 @@ Free to use for personal projects of any size. Consider donation/sponsorship via
 
 If you or your startup require AWS infrastructure support (hourly or monthly) give us a shout: awsrefarchitects@protonmail.com
 
+## Setup
+
+For `localstack` support:
+
+1. Install `tfenv`.
+  - Instructions: https://github.com/tfutils/tfenv
+2. Install `localstack`:
+  - `pip install localstack`
+2. Install `awslocal`:
+  - `pip install awscli-local`
+3. Install `tflocal`:
+  - `pip install terraform-local`
+
+## Usage
+
+1. Launch `localstack`: `localstack start -d`
+
 ### Batteries Included - Terraform definitions and Dockerfiles for your cloud project.
 
 #### Support For:
