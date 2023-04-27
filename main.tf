@@ -2,8 +2,13 @@ module "s3_website_staging" {
   source = "./modules/s3/website"
   bucket_name = "staging"
 }
-
-module "vpc_main_staging" {
+/*
+module "default_vpc" {
+  source = "./modules/default_vpc"
+  vpc_cidr = "${var.default_vpc_cidr}"
+}
+*/
+module "main_vpc" {
   source = "./modules/vpc"
-  vpc_cidr = "10.0.0.0/16"
+  vpc_cidr = "${var.default_vpc_cidr}"
 }

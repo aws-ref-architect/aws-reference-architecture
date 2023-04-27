@@ -1,5 +1,5 @@
 variable "vpc_cidr" {
-  description = "Network of valid host IPs."
+  description = "IPv4 CIDR block for VPC."
   type        = string
 }
 
