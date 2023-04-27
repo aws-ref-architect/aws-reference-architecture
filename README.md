@@ -10,8 +10,12 @@ If you or your startup require AWS infrastructure support (hourly or monthly) gi
 
 ## Setup
 
-For `localstack` support:
+For `localstack` support (develop offline without requiring AWS access, much faster):
 
+0. Create new Python virtual environment and install dependencies:
+  - `python -m venv ./venv`
+  - `pip install -r requirements.txt`
+  - Note: `python3.10` is not currently supported, use `python3.8` and `python3.9`.
 1. Install `tfenv`.
   - Instructions: https://github.com/tfutils/tfenv
 2. Install `localstack`:
