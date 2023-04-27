@@ -25,9 +25,19 @@ For `localstack` support (develop offline without requiring AWS access, much fas
 3. Install `tflocal`:
   - `pip install terraform-local`
 
+### Useful Commands
+
+1. Query VPCs:
+  `aws --endpoint-url=http://localhost:4566 ec2 describe-vpcs`
+
 ## Usage
 
 1. Launch `localstack`: `localstack start -d`
+2. Run Terraform:
+  1. `tflocal init`
+  2. `tflocal plan`
+  3. `tflocal apply`
+3. Manually verify S3 bucket creation:
 
 ### Batteries Included - Terraform definitions and Dockerfiles for your cloud project.
 
