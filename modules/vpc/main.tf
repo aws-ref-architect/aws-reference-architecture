@@ -5,3 +5,4 @@ resource "aws_vpc" "vpc" {
   enable_network_address_usage_metrics = true
   enable_dns_hostnames = true
 }
+

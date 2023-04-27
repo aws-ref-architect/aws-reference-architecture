@@ -24,6 +24,18 @@ For `localstack` support (develop offline without requiring AWS access, much fas
   - `pip install awscli-local`
 3. Install `tflocal`:
   - `pip install terraform-local`
+4. On AWS, delete the following insecure defaults:
+  1. Default security group: `aws ec2 delete-security-group --group-id ******`
+  2. Default Network access control list (ACL): `aws ec2 delete-network-acl --network-acl-id ******`
+  3. Default subnets: `aws ec2 delete-subnet --subnet-id ******`
+  4. Default route table: `aws ec2 delete-route-table --route-table-id ******`
+  5. Default internet gateway:
+    - `aws ec2 detach-internet-gateway --internet-gateway-id ****** --vpc-id ******`
+    - `aws ec2 delete-internet-gateway --internet-gateway-id ******`
+    - OPTIONAL: `aws ec2 delete-egress-only-internet-gateway --egress-only-internet-gateway-id ******`
+  6. Default VPC: `aws ec2 delete-vpc --vpc-id ******`
+  7. Default DHCP settings: TODO
+Notes: https://docs.aws.amazon.com/vpc/latest/userguide/delete-vpc.html
 
 ### Useful Commands
 
