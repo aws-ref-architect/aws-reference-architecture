@@ -26,6 +26,6 @@ output "default_security_group_id" {
   value = aws_vpc.vpc.default_security_group_id
 }
 
-output tags {
+output "tags" {
   value = aws_vpc.vpc.tags
 }

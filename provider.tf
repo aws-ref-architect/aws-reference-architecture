@@ -1,7 +1,7 @@
 provider "aws" {
-  region                      = "us-east-1"
-  access_key                  = "fake"
-  secret_key                  = "fake"
+  region     = "us-east-1"
+  access_key = "fake"
+  secret_key = "fake"
 
   s3_use_path_style           = false
   skip_credentials_validation = true
@@ -9,6 +9,6 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    s3             = "http://s3.localhost.localstack.cloud:4566"
+    s3 = "http://s3.localhost.localstack.cloud:4566"
   }
 }
