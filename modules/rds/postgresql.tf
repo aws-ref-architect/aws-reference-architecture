@@ -1,4 +1,4 @@
-resource "aws_kms_key" "database_key" {
+resource "aws_kms_key" "postgresql_key" {
   description = "KMS key for RDS database."
 }
 
@@ -30,8 +30,8 @@ resource "aws_db_instance" "rds_postgresql" {
   publicly_accessible                   = false
   vpc_security_group_ids                = [aws_security_group.postgresql_rds.id]
   manage_master_user_password           = true
-  master_user_secret_kms_key_id         = aws_kms_key.database_key.key_id
-  db_name                               = "postgres"
+  master_user_secret_kms_key_id         = aws_kms_key.postgresql_key.key_id
+  db_name                               = var.postgresql_database_name
   username                              = "postgres"
   storage_encrypted                     = "true"
   backup_window                         = "10:00-11:00"
@@ -40,7 +40,7 @@ resource "aws_db_instance" "rds_postgresql" {
   allow_major_version_upgrade           = true
   apply_immediately                     = false
   multi_az                              = true
-  availability_zone                     = "us-east-1a"
+  availability_zone                     = var.availability_zones[0]
   enabled_cloudwatch_logs_exports       = ["postgresql", "upgrade"]
   monitoring_interval                   = 1
   performance_insights_enabled          = true
