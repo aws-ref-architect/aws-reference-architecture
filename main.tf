@@ -1,3 +1,8 @@
+// Global terraform state bucket.
+module "terraform_state" {
+  source = "./modules/s3/terraform_state"
+}
+
 // Global logging bucket for all logs.
 module "global_logs" {
   source = "./modules/s3/logs"

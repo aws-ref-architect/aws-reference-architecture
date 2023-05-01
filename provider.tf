@@ -12,3 +12,12 @@ provider "aws" {
     s3 = "http://s3.localhost.localstack.cloud:4566"
   }
 }
+
+# terraform {
+#   backend "s3" {
+#     bucket         = "terraform-state-backend"
+#     key            = "terraform.tfstate"
+#     region         = "us-east-2"
+#     dynamodb_table = "terraform_state"
+#   }
+# }
