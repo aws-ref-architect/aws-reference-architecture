@@ -5,84 +5,90 @@ resource "aws_vpc" "vpc" {
   enable_dns_support                   = true
   enable_network_address_usage_metrics = true
   enable_dns_hostnames                 = true
+
+  tags = merge(
+    { "Name" = var.name },
+    var.tags,
+    var.vpc_tags,
+  )
 }
 
 // VPC Subnets.
 resource "aws_subnet" "dmz_0000001" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.0.0/24"
-  availability_zone = "us-east-2a"
+  cidr_block        = var.dmz_cidr[0]
+  availability_zone = var.availability_zones[0]
 }
 
 resource "aws_subnet" "dmz_0000002" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-2b"
+  cidr_block        = var.dmz_cidr[1]
+  availability_zone = var.availability_zones[1]
 }
 
 resource "aws_subnet" "dmz_0000003" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = "us-east-2c"
+  cidr_block        = var.dmz_cidr[2]
+  availability_zone = var.availability_zones[2]
 }
 
 resource "aws_subnet" "semi_private_0000001" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.10.0/24"
-  availability_zone = "us-east-2a"
+  cidr_block        = var.semi_private_cidr[0]
+  availability_zone = var.availability_zones[0]
 }
 
 resource "aws_subnet" "semi_private_0000002" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.11.0/24"
-  availability_zone = "us-east-2b"
+  cidr_block        = var.semi_private_cidr[1]
+  availability_zone = var.availability_zones[1]
 }
 
 resource "aws_subnet" "semi_private_0000003" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.12.0/24"
-  availability_zone = "us-east-2c"
+  cidr_block        = var.semi_private_cidr[2]
+  availability_zone = var.availability_zones[2]
 }
 
 resource "aws_subnet" "private_0000001" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.20.0/24"
-  availability_zone       = "us-east-2a"
+  cidr_block              = var.private_cidr[0]
+  availability_zone       = var.availability_zones[0]
   map_public_ip_on_launch = false
 }
 
 resource "aws_subnet" "private_0000002" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.21.0/24"
-  availability_zone       = "us-east-2b"
+  cidr_block              = var.private_cidr[1]
+  availability_zone       = var.availability_zones[1]
   map_public_ip_on_launch = false
 }
 
 resource "aws_subnet" "private_0000003" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.22.0/24"
-  availability_zone       = "us-east-2c"
+  cidr_block              = var.private_cidr[2]
+  availability_zone       = var.availability_zones[2]
   map_public_ip_on_launch = false
 }
 
 resource "aws_subnet" "database_0000001" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.30.0/24"
-  availability_zone       = "us-east-2a"
+  cidr_block              = var.database_cidr[0]
+  availability_zone       = var.availability_zones[0]
   map_public_ip_on_launch = false
 }
 
 resource "aws_subnet" "database_0000002" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.31.0/24"
-  availability_zone       = "us-east-2b"
+  cidr_block              = var.database_cidr[1]
+  availability_zone       = var.availability_zones[1]
   map_public_ip_on_launch = false
 }
 
 resource "aws_subnet" "database_0000003" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.32.0/24"
-  availability_zone       = "us-east-2c"
+  cidr_block              = var.database_cidr[2]
+  availability_zone       = var.availability_zones[2]
   map_public_ip_on_launch = false
 }
 
@@ -178,7 +184,7 @@ resource "aws_security_group" "semi_private" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
+    cidr_blocks = var.dmz_cidr
   }
 
   ingress {
@@ -186,7 +192,7 @@ resource "aws_security_group" "semi_private" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
+    cidr_blocks = var.dmz_cidr
   }
 
   egress {
@@ -245,7 +251,7 @@ resource "aws_security_group" "private" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
+    cidr_blocks = var.semi_private_cidr
   }
 
   ingress {
@@ -253,7 +259,7 @@ resource "aws_security_group" "private" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
+    cidr_blocks = var.semi_private_cidr
   }
 
   egress {
@@ -261,7 +267,7 @@ resource "aws_security_group" "private" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
+    cidr_blocks = var.semi_private_cidr
   }
 
   egress {
@@ -269,7 +275,7 @@ resource "aws_security_group" "private" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
+    cidr_blocks = var.semi_private_cidr
   }
 
   egress {
@@ -277,7 +283,7 @@ resource "aws_security_group" "private" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = ["10.0.30.0/24", "10.0.31.0/24", "10.0.32.0/24"]
+    cidr_blocks = var.database_cidr
   }
 
   egress {
@@ -285,7 +291,7 @@ resource "aws_security_group" "private" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["10.0.30.0/24", "10.0.31.0/24", "10.0.32.0/24"]
+    cidr_blocks = var.database_cidr
   }
 
   egress {
@@ -293,7 +299,7 @@ resource "aws_security_group" "private" {
     from_port   = 1433
     to_port     = 1433
     protocol    = "tcp"
-    cidr_blocks = ["10.0.30.0/24", "10.0.31.0/24", "10.0.32.0/24"]
+    cidr_blocks = var.database_cidr
   }
 }
 
@@ -328,7 +334,7 @@ resource "aws_security_group" "database" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
+    cidr_blocks = var.private_cidr
   }
 
   ingress {
@@ -336,7 +342,7 @@ resource "aws_security_group" "database" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
+    cidr_blocks = var.private_cidr
   }
 
   ingress {
@@ -344,7 +350,7 @@ resource "aws_security_group" "database" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
+    cidr_blocks = var.private_cidr
   }
 
   ingress {
@@ -352,7 +358,7 @@ resource "aws_security_group" "database" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
+    cidr_blocks = var.private_cidr
   }
 
   ingress {
@@ -360,6 +366,6 @@ resource "aws_security_group" "database" {
     from_port   = 1433
     to_port     = 1433
     protocol    = "tcp"
-    cidr_blocks = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
+    cidr_blocks = var.private_cidr
   }
 }
