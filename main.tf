@@ -1,3 +1,8 @@
+// Global logging bucket for all logs.
+module "global_logs" {
+  source = "./modules/s3/logs"
+}
+
 module "s3_website_production" {
   source      = "./modules/s3/website"
   bucket_name = "production.your-website.com"
