@@ -1,6 +1,19 @@
+module "s3_website_production" {
+  source      = "./modules/s3/website"
+  bucket_name = "production.your-website.com"
+  environment = "production"
+}
+
 module "s3_website_staging" {
   source      = "./modules/s3/website"
-  bucket_name = "staging"
+  bucket_name = "staging.your-website.com"
+  environment = "staging"
+}
+
+module "s3_website_development" {
+  source      = "./modules/s3/website"
+  bucket_name = "development.your-website.com"
+  environment = "development"
 }
 
 module "default_vpc_to_destroy" {
@@ -18,6 +31,12 @@ module "production_vpc" {
   environment = "production"
   availability_zones = var.availability_zones
 }
+
+/*
+module "production_postgresql" {
+  source = "./modules/rds"
+}
+*/
 
 module "staging_vpc" {
   source   = "./modules/vpc"
