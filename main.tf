@@ -71,3 +71,12 @@ module "development_vpc" {
   environment = "development"
   availability_zones = var.availability_zones
 }
+
+// NOTE: localstack does not support ECR/ECS without a subscription.
+// ECR repositories.
+/*
+module "main_website" {
+  source = "./modules/ecs/ecr"
+  service_name = "main-website-frontend"
+}
+*/
