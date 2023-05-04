@@ -26,6 +26,18 @@ output "default_security_group_id" {
   value = aws_vpc.vpc.default_security_group_id
 }
 
+output "aws_subnet_dmz_0000001_id" {
+  value = aws_subnet.dmz_0000001.id
+}
+
+output "aws_subnet_dmz_0000002_id" {
+  value = aws_subnet.dmz_0000002.id
+}
+
+output "aws_subnet_dmz_0000003_id" {
+  value = aws_subnet.dmz_0000003.id
+}
+
 output "tags" {
   value = aws_vpc.vpc.tags
 }

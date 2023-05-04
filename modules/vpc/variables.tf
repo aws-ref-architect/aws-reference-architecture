@@ -9,7 +9,7 @@ variable "environment" {
 }
 
 variable "availability_zones" {
-  description = "Availability zones used by project."
+  description = "Availability zones used by VPC."
   type        = list(string)
   default     = ["us-east-2a", "us-east-2b", "us-east-2c"]
 }

@@ -74,9 +74,49 @@ module "development_vpc" {
 
 // NOTE: localstack does not support ECR/ECS without a subscription.
 // ECR repositories.
-/*
 module "main_website" {
   source = "./modules/ecs/ecr"
   service_name = "main-website-frontend"
 }
-*/
+
+module "development_dmz_cluster" {
+  source = "./modules/ecs"
+  name = "development_dmz"
+  environment = "development"
+  vpc_id = development_vpc.id
+  // base_image_id = ""
+  availability_zones = var.availability_zones
+  subnet_ids = [
+    development_vpc.aws_subnet.dmz_0000001.id,
+    development_vpc.aws_subnet.dmz_0000002.id,
+    development_vpc.aws_subnet.dmz_0000003.id
+  ]
+  min_cluster_size = 3
+  max_cluster_size = 12
+  desired_cluster_size = 3
+  associate_public_ip_address = false
+  root_volume_size = 5
+  docker_volume_size = 5
+
+  resource "aws_security_group" "dmz" {
+    name        = "dmz"
+    description = "Allow inbound HTTP(S) traffic."
+    vpc_id      = development_vpc.id
+
+    ingress {
+      description = "HTTP"
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+      description = "HTTPS"
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+}
