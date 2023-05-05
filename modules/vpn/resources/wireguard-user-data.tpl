@@ -1,5 +1,5 @@
 #! /bin/bash
-echo "Installing WireGuard"
+echo "Installing WireGuard..."
 sudo apt update && apt -y install net-tools wireguard
 echo "WireGuard installed."
 

@@ -63,3 +63,32 @@ variable "wg_peers" {
     allowed_ips = "10.0.0.0/24"
   }]
 }
+
+/* Initial wireguard config:
+
+variable "vpn_server_cidr" {
+  default = "172.16.16.0/20"
+}
+
+variable "wg_server_port" {
+  type = number
+  default = 51820
+}
+
+variable "wg_server_private_key" {
+  default = "2NeAmS4qLt97KDDkzJzLtaT2pOuygcgUtteCmB39q2M="
+}
+
+variable "wg_server_public_key" {
+  default = "EpM0RIL+4iaHvsotrYR2gaIA/OEmZ0ZmQwfn0dHx6Qo="
+}
+
+variable "wg_peers" {
+  type = list
+  default = [{
+    name = "dummy"
+    public_key = "Ff4oI/aXC2RBBZmU3QVJFebc4Q1mJ+zY8pCqfnVKo3o="
+    allowed_ips = "172.16.16.2"
+  }]
+}
+*/

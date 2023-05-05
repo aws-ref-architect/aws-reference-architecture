@@ -61,7 +61,7 @@ resource "aws_instance" "wireguard" {
   instance_type          = "t3.nano"
   subnet_id              = aws_subnet.vpn_0000001.id
   vpc_security_group_ids = [aws_security_group.wireguard.id]
-  user_data = data.template_file.wireguard_userdata.rendered
+  user_data = data.template_file.wireguard_user_data.rendered
 }
 
 resource "aws_eip" "wireguard" {
@@ -73,7 +73,7 @@ resource "aws_eip_association" "wireguard" {
   allocation_id = aws_eip.wireguard.id
 }
 
-data "template_file" "wireguard_userdata_peers" {
+data "template_file" "wireguard_user_data_peers" {
   template = file("resources/wireguard-user-data-peers.tpl")
   count = length(var.wg_peers)
   vars = {
@@ -83,13 +83,13 @@ data "template_file" "wireguard_userdata_peers" {
   }
 }
 
-data "template_file" "wireguard_userdata" {
+data "template_file" "wireguard_user_data" {
   template = file("resources/wireguard-user-data.tpl")
   vars = {
     client_network_cidr = var.vpn_wireguard_cidr[0]
     wg_server_private_key = var.wg_server_private_key
     wg_server_public_key = var.wg_server_public_key
     wg_server_port = var.wg_server_port
-    wg_peers = join("\n", data.template_file.wireguard_userdata_peers.*.rendered)
+    wg_peers = join("\n", data.template_file.wireguard_user_data_peers.*.rendered)
   }
 }
