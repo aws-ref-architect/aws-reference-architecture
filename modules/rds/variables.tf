@@ -7,37 +7,37 @@ variable "availability_zones" {
 
 variable "environment" {
   description = "Specify one of: production, staging, development, or development_0000001-development_1000000"
-  type = string
+  type        = string
 }
 
 variable "min_allocated_storage" {
   description = "Minimum storage allocation in GBs."
-  type = number
-  default = 10
+  type        = number
+  default     = 10
 }
 
 variable "max_allocated_storage" {
   description = "Minimum storage allocation in GBs."
-  type = number
-  default = 100
+  type        = number
+  default     = 100
 }
 
 variable "postgresql_database_name" {
-  type = string
+  type    = string
   default = "postgres"
 }
 
 variable "postgresql_engine_version" {
-  type = string
+  type    = string
   default = 15.2
 }
 
 variable "instance_class" {
-  type = string
+  type    = string
   default = "db.t3.micro"
 }
 
 variable "private_cidr" {
-  type = list(string)
-  default     = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
+  type    = list(string)
+  default = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
 }

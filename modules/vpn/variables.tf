@@ -1,21 +1,15 @@
-variable "vpc_cidr" {
-  description = "IPv4 CIDR block for VPC."
-  type        = string
-}
-
-variable "environment" {
-  description = "Specify one of: production, staging, development, or development_0000001-development_1000000"
-  type        = string
-}
-
-variable "availability_zones" {
-  description = "Availability zones used by VPC."
-  type        = list(string)
-  default     = ["us-east-2a", "us-east-2b", "us-east-2c"]
-}
-
-variable "name" {
+variable "vpc_name" {
   description = "Name of VPC."
+  type        = string
+}
+
+variable "vpc_id" {
+  description = "ID of VPC."
+  type        = string
+}
+
+variable "vpn_wireguard_subnet_id" {
+  description = "ID of subnet for Wireguard VPN."
   type        = string
 }
 
@@ -43,20 +37,7 @@ variable "private_cidr" {
   default     = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
 }
 
-variable "database_cidr" {
-  description = "IPv4 CIDR blocks for database tier of VPC."
+variable "accessible_subnets" {
+  description = "Exhaustive list of accessible subnets."
   type        = list(string)
-  default     = ["10.0.30.0/24", "10.0.31.0/24", "10.0.32.0/24"]
-}
-
-variable "tags" {
-  description = "Tags."
-  type        = map(string)
-  default     = {}
-}
-
-variable "vpc_tags" {
-  description = "VPC-specific tags."
-  type        = map(string)
-  default     = {}
 }

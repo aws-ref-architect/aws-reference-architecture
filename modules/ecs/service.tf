@@ -5,7 +5,7 @@ resource "aws_ecs_service" "service" {
   desired_count   = 3
   iam_role        = aws_iam_role.service.arn
   depends_on      = [aws_iam_role_policy.ecs_services]
-  launch_type = "EC2"
+  launch_type     = "EC2"
 
   ordered_placement_strategy {
     type  = "spread"
@@ -29,10 +29,10 @@ resource "aws_ecs_service" "service" {
 }
 
 resource "aws_ecs_task_definition" "service" {
-  family = "service"
-  network_mode             = "awsvpc"
-  cpu       = 1024
-  memory    = 512
+  family       = "service"
+  network_mode = "awsvpc"
+  cpu          = 1024
+  memory       = 512
   container_definitions = jsonencode([
     {
       name      = "service"

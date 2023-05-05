@@ -31,15 +31,36 @@ module "default_vpc_to_destroy" {
 }
 
 module "production_vpc" {
-  source   = "./modules/vpc"
-  name = "production"
-  vpc_cidr = var.production_vpc_cidr
-  dmz_cidr = var.production_dmz_subnets
-  semi_private_cidr = var.production_semi_private_subnets
-  private_cidr = var.production_private_subnets
-  database_cidr = var.production_database_subnets
-  environment = "production"
+  source             = "./modules/vpc"
+  name               = "production"
+  vpc_cidr           = var.production_vpc_cidr
+  dmz_cidr           = var.production_dmz_subnets
+  semi_private_cidr  = var.production_semi_private_subnets
+  private_cidr       = var.production_private_subnets
+  database_cidr      = var.production_database_subnets
+  environment        = "production"
   availability_zones = var.availability_zones
+}
+
+module "production_vpn_wireguard" {
+  source                  = "./modules/vpn"
+  vpc_id                  = production_vpc.vpc.id
+  vpc_name                = production_vpc.vpc.name
+  vpn_wireguard_subnet_id = aws_subnet.vpn_0000001.id
+}
+
+locals {
+  vpn_accessible_subnets = concat(
+    aws_subnet.dmz_0000001.id,
+    aws_subnet.dmz_0000002.id,
+    aws_subnet.dmz_0000003.id,
+    aws_subnet.semi_private_0000001.id,
+    aws_subnet.semi_private_0000002.id,
+    aws_subnet.semi_private_0000003.id,
+    aws_subnet.private_0000001.id,
+    aws_subnet.private_0000002.id,
+    aws_subnet.private_0000003.id
+  )
 }
 
 /*
@@ -49,41 +70,41 @@ module "production_postgresql" {
 */
 
 module "staging_vpc" {
-  source   = "./modules/vpc"
-  name = "staging"
-  vpc_cidr = var.staging_vpc_cidr
-  dmz_cidr = var.staging_dmz_subnets
-  semi_private_cidr = var.staging_semi_private_subnets
-  private_cidr = var.staging_private_subnets
-  database_cidr = var.staging_database_subnets
-  environment = "staging"
+  source             = "./modules/vpc"
+  name               = "staging"
+  vpc_cidr           = var.staging_vpc_cidr
+  dmz_cidr           = var.staging_dmz_subnets
+  semi_private_cidr  = var.staging_semi_private_subnets
+  private_cidr       = var.staging_private_subnets
+  database_cidr      = var.staging_database_subnets
+  environment        = "staging"
   availability_zones = var.availability_zones
 }
 
 module "development_vpc" {
-  source   = "./modules/vpc"
-  name = "development"
-  vpc_cidr = var.development_vpc_cidr
-  dmz_cidr = var.development_dmz_subnets
-  semi_private_cidr = var.development_semi_private_subnets
-  private_cidr = var.development_private_subnets
-  database_cidr = var.development_database_subnets
-  environment = "development"
+  source             = "./modules/vpc"
+  name               = "development"
+  vpc_cidr           = var.development_vpc_cidr
+  dmz_cidr           = var.development_dmz_subnets
+  semi_private_cidr  = var.development_semi_private_subnets
+  private_cidr       = var.development_private_subnets
+  database_cidr      = var.development_database_subnets
+  environment        = "development"
   availability_zones = var.availability_zones
 }
 
 // NOTE: localstack does not support ECR/ECS without a subscription.
 // ECR repositories.
 module "main_website" {
-  source = "./modules/ecs/ecr"
+  source       = "./modules/ecs/ecr"
   service_name = "main-website-frontend"
 }
 
 module "development_dmz_cluster" {
-  source = "./modules/ecs"
-  name = "development_dmz"
+  source      = "./modules/ecs"
+  name        = "development_dmz"
   environment = "development"
-  vpc_id = development_vpc.id
+  vpc_id      = development_vpc.id
   // base_image_id = ""
   availability_zones = var.availability_zones
   subnet_ids = [
@@ -91,12 +112,12 @@ module "development_dmz_cluster" {
     development_vpc.aws_subnet.dmz_0000002.id,
     development_vpc.aws_subnet.dmz_0000003.id
   ]
-  min_cluster_size = 3
-  max_cluster_size = 12
-  desired_cluster_size = 3
+  min_cluster_size            = 3
+  max_cluster_size            = 12
+  desired_cluster_size        = 3
   associate_public_ip_address = false
-  root_volume_size = 5
-  docker_volume_size = 5
+  root_volume_size            = 5
+  docker_volume_size          = 5
 
   resource "aws_security_group" "dmz" {
     name        = "dmz"

@@ -28,7 +28,7 @@ resource "aws_ecs_capacity_provider" "cluster" {
 }
 
 resource "aws_ecs_cluster" "cluster" {
-  name = "${var.cluster_name}"
+  name = var.cluster_name
 
   lifecycle {
     create_before_destroy = true
@@ -42,15 +42,15 @@ resource "aws_ecs_cluster" "cluster" {
       log_configuration {
         cloud_watch_encryption_enabled = true
         cloud_watch_log_group_name     = aws_cloudwatch_log_group.cluster.name
-        s3_bucket_name = "global_logs"
-        s3_bucket_encryption_enabled = true
-        s3_key_prefix = "ecs/"
+        s3_bucket_name                 = "global_logs"
+        s3_bucket_encryption_enabled   = true
+        s3_key_prefix                  = "ecs/"
       }
     }
   }
 
   setting {
-    name = "containerInsights"
+    name  = "containerInsights"
     value = "enabled"
   }
 }
@@ -66,7 +66,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   threshold           = "80"
 
   dimensions {
-    ClusterName = "${aws_ecs_cluster.cluster.name}"
+    ClusterName = aws_ecs_cluster.cluster.name
   }
 
   alarm_description = "Scale up if the CPU reservation is above 80% for 5 minutes."
@@ -88,7 +88,7 @@ resource "aws_cloudwatch_metric_alarm" "memory_high" {
   threshold           = "80"
 
   dimensions {
-    ClusterName = "${aws_ecs_cluster.main.name}"
+    ClusterName = aws_ecs_cluster.main.name
   }
 
   alarm_description = "Scale up if the memory reservation is above 80% for 5 minutes."
@@ -112,7 +112,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
   threshold           = "25"
 
   dimensions {
-    ClusterName = "${aws_ecs_cluster.main.name}"
+    ClusterName = aws_ecs_cluster.main.name
   }
 
   alarm_description = "Scale down if the CPU reservation is below 25% for 5 minutes."
@@ -120,8 +120,8 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
 
   lifecycle {
     create_before_destroy = true
-
-  depends_on = ["aws_cloudwatch_metric_alarm.memory_high"]
+  }
+  depends_on = [aws_cloudwatch_metric_alarm.memory_high]
 }
 
 resource "aws_cloudwatch_metric_alarm" "memory_low" {
@@ -135,7 +135,7 @@ resource "aws_cloudwatch_metric_alarm" "memory_low" {
   threshold           = "25"
 
   dimensions {
-    ClusterName = "${aws_ecs_cluster.main.name}"
+    ClusterName = aws_ecs_cluster.main.name
   }
 
   alarm_description = "Scale down if the memory reservation is below 25% for 5 minutes."
@@ -149,31 +149,31 @@ resource "aws_cloudwatch_metric_alarm" "memory_low" {
 }
 
 resource "aws_autoscaling_group" "cluster" {
-  name = "${var.cluster_name}"
+  name = var.cluster_name
 
   availability_zones   = ["${var.availability_zones}"]
   vpc_zone_identifier  = ["${var.subnet_ids}"]
-  launch_configuration = "${aws_launch_configuration.main.id}"
-  min_size             = "${var.min_cluster_size}"
-  max_size             = "${var.max_cluster_size}"
-  desired_capacity     = "${var.desired_cluster_size}"
+  launch_configuration = aws_launch_configuration.main.id
+  min_size             = var.min_cluster_size
+  max_size             = var.max_cluster_size
+  desired_capacity     = var.desired_cluster_size
   termination_policies = ["OldestLaunchConfiguration", "Default"]
 
   tag {
     key                 = "Name"
-    value               = "${var.cluster_name}"
+    value               = var.cluster_name
     propagate_at_launch = true
   }
 
   tag {
     key                 = "Cluster"
-    value               = "${var.cluster_name}"
+    value               = var.cluster_name
     propagate_at_launch = true
   }
 
   tag {
     key                 = "Environment"
-    value               = "${var.environment}"
+    value               = var.environment
     propagate_at_launch = true
   }
 
@@ -187,7 +187,7 @@ resource "aws_autoscaling_policy" "scale_up" {
   scaling_adjustment     = 2
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
-  autoscaling_group_name = "${aws_autoscaling_group.cluster.name}"
+  autoscaling_group_name = aws_autoscaling_group.cluster.name
 
   lifecycle {
     create_before_destroy = true
@@ -199,7 +199,7 @@ resource "aws_autoscaling_policy" "scale_down" {
   scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
-  autoscaling_group_name = "${aws_autoscaling_group.cluster.name}"
+  autoscaling_group_name = aws_autoscaling_group.cluster.name
 
   lifecycle {
     create_before_destroy = true
