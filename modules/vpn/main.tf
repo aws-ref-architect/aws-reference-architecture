@@ -1,3 +1,5 @@
+# Based on: https://www.perdian.de/blog/2021/12/27/setting-up-a-wireguard-vpn-at-aws-using-terraform/
+
 locals {
   accessible_subnets = concat(var.dmz_cidr, var.semi_private_cidr, var.private_cidr)
 }
@@ -59,6 +61,7 @@ resource "aws_instance" "wireguard" {
   instance_type          = "t3.nano"
   subnet_id              = aws_subnet.vpn_0000001.id
   vpc_security_group_ids = [aws_security_group.wireguard.id]
+  user_data = data.template_file.wireguard_userdata.rendered
 }
 
 resource "aws_eip" "wireguard" {
@@ -68,4 +71,25 @@ resource "aws_eip" "wireguard" {
 resource "aws_eip_association" "wireguard" {
   instance_id   = aws_instance.wireguard.id
   allocation_id = aws_eip.wireguard.id
+}
+
+data "template_file" "wireguard_userdata_peers" {
+  template = file("resources/wireguard-user-data-peers.tpl")
+  count = length(var.wg_peers)
+  vars = {
+    peer_name = var.wg_peers[count.index].name
+    peer_public_key = var.wg_peers[count.index].public_key
+    peer_allowed_ips = var.wg_peers[count.index].allowed_ips
+  }
+}
+
+data "template_file" "wireguard_userdata" {
+  template = file("resources/wireguard-user-data.tpl")
+  vars = {
+    client_network_cidr = var.vpn_wireguard_cidr[0]
+    wg_server_private_key = var.wg_server_private_key
+    wg_server_public_key = var.wg_server_public_key
+    wg_server_port = var.wg_server_port
+    wg_peers = join("\n", data.template_file.wireguard_userdata_peers.*.rendered)
+  }
 }

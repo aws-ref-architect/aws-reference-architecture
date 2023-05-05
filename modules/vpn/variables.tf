@@ -41,3 +41,25 @@ variable "accessible_subnets" {
   description = "Exhaustive list of accessible subnets."
   type        = list(string)
 }
+
+variable "wg_server_port" {
+  type = number
+  default = 51820
+}
+
+variable "wg_server_private_key" {
+  default = ""
+}
+
+variable "wg_server_public_key" {
+  default = ""
+}
+
+variable "wg_peers" {
+  type = list
+  default = [{
+    name = "dummy"
+    public_key = ""
+    allowed_ips = "10.0.0.0/24"
+  }]
+}
