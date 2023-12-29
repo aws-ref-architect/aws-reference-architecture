@@ -2,7 +2,7 @@
 
 ## Starter Architecture for Your Company on AWS Cloud
 
-### Virtual Private Cloud (VPC) on Amazon AWS with ECS using Terraform.
+### ECS Virtual Private Cloud (VPC) on Amazon AWS using Terraform.
 
 Free to use for personal projects of any size. Consider donation/sponsorship via Github of between $10-$5,000 if you are using as part of an organization (more than 2 people). Thanks for your interest!!!
 
@@ -10,21 +10,12 @@ If you or your startup require AWS infrastructure support (hourly or monthly) gi
 
 ## Setup
 
-For `localstack` support (develop offline without requiring AWS access, much faster):
-
 0. Create new Python virtual environment and install dependencies:
   - `python -m venv ./venv`
   - `pip install -r requirements.txt`
-  - Note: `python3.10` is not currently supported, use `python3.8` and `python3.9`.
 1. Install `tfenv`.
   - Instructions: https://github.com/tfutils/tfenv
-2. Install `localstack`:
-  - `pip install localstack`
-2. Install `awslocal`:
-  - `pip install awscli-local`
-3. Install `tflocal`:
-  - `pip install terraform-local`
-4. On AWS, delete the following insecure defaults:
+2. On AWS, delete the following insecure defaults:
     1. Default security group: `aws ec2 delete-security-group --group-id ******`
     2. Default Network access control list (ACL): `aws ec2 delete-network-acl --network-acl-id ******`
     3. Default subnets: `aws ec2 delete-subnet --subnet-id ******`
@@ -37,19 +28,13 @@ For `localstack` support (develop offline without requiring AWS access, much fas
     7. Default DHCP settings: TODO
     - Notes: https://docs.aws.amazon.com/vpc/latest/userguide/delete-vpc.html
 
-### Useful Commands
-
-1. Query VPCs:
-  `aws --endpoint-url=http://localhost:4566 ec2 describe-vpcs`
-
 ## Usage
 
-1. Launch `localstack`: `localstack start -d`
-2. Run Terraform:
-  1. `tflocal init`
-  2. `tflocal plan`
-  3. `tflocal apply`
-3. Manually verify S3 bucket creation:
+1. Run Terraform:
+  1. `terraform init`
+  2. `terrafom validate`
+  3. `terraform plan`
+  4. `terraform apply`
 
 ### Batteries Included - Terraform definitions and Dockerfiles for your cloud project.
 
@@ -114,4 +99,3 @@ By default, most people on AWS never make it out of the default VPC that gets cr
 6. Either way, your load balancers act as DNS resolvers and SSL/TLS terminators. All ECS services are configured to use TLS certificates in the default configuration. 
 7. By default, network ACLs and security groups follow the "least privilege" approach to security. That means that by default the cloud discards all traffic behind **VPC_Web**. In addition, **VPC_Database** only exposes required database ports (eg. 5432 for PostgreSQL databases). To access the production data tier, you will need to modify the network ACL and security group associated with the given subnet which houses the database. This means that a compromise of web-facing assets in the web tier does not lead to a compromise of customer data.
 8. For additional security, feel free to disable the VPN attachment and/or VPN transit gateway when not in use.
- 
