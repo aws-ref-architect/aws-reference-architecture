@@ -10,12 +10,23 @@ If you or your startup require AWS infrastructure support (hourly or monthly) gi
 
 ## Setup
 
-0. Create new Python virtual environment and install dependencies:
-  - `python -m venv ./venv`
-  - `pip install -r requirements.txt`
+**Examine and run `bash setup.sh`**, Or:
+
+0. Create new Python virtual environment and install AWS dependency:
+
+    1. `python -m venv ./venv`
+    2. `source venv/bin/activate`
+    3. `pip install -r requirements.txt`
 1. Install `tfenv`.
-  - Instructions: https://github.com/tfutils/tfenv
-2. On AWS, delete the following insecure defaults:
+    1. Instructions: https://github.com/tfutils/tfenv
+2. Modifying AWS Infrastructure Definitions (`.tf` files):
+
+    0. Modify `.tf ` files.
+    1. `terrafom validate  && terraform init`
+    2. `terraform plan`
+    3. `terraform apply`
+3. On AWS, delete the following insecure defaults:
+
     1. Default security group: `aws ec2 delete-security-group --group-id ******`
     2. Default Network access control list (ACL): `aws ec2 delete-network-acl --network-acl-id ******`
     3. Default subnets: `aws ec2 delete-subnet --subnet-id ******`
@@ -28,13 +39,6 @@ If you or your startup require AWS infrastructure support (hourly or monthly) gi
     7. Default DHCP settings: TODO
     - Notes: https://docs.aws.amazon.com/vpc/latest/userguide/delete-vpc.html
 
-## Usage
-
-1. Run Terraform:
-  1. `terraform init`
-  2. `terrafom validate`
-  3. `terraform plan`
-  4. `terraform apply`
 
 ### Batteries Included - Terraform definitions and Dockerfiles for your cloud project.
 

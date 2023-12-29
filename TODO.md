@@ -1,15 +1,15 @@
 # Overall TODOs
 
-1. Get working with localstack.
-- Create test S3 bucket w/ localstack.
+1. Create test S3 bucket w/ localstack.
+2. Implement VPC and routing.
+3. RDS databases (Pg, MySQL, Mariadb, MSSQL)
+- With backups, encryption, KMS for passwords
+4. VPN access (wireguard)
+5. Network ACLs
 
-Downgrade python to 3.8, 3.9 from 3.10
+ECS TODO
+1. Instances -> clusters
+2. Security groups
+3. Autoscaling groups
 
-# Current state
-/home/codespace/.python/current/bin/python
-/home/codespace/.python/current/bin/python3
-
-/usr/local/python/current
-/usr/local/python/current -> 3.10.4
-
-/usr/local/python/current -> 3.9.7
+- development -> 
