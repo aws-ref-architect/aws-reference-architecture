@@ -13,3 +13,9 @@ ln -s ~/.tfenv/bin/* /usr/local/bin
 # Install latest terraform version.
 tfenv install latest
 tfenv use latest
+# Setup AWS Environment Variables:
+## Set your AWS ENV in `.env`.
+source .env
+terraform validate
+terraform init
+terraform plan

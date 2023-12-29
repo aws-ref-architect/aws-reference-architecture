@@ -25,7 +25,8 @@ If you or your startup require AWS infrastructure support (hourly or monthly) gi
     1. `terrafom validate  && terraform init`
     2. `terraform plan`
     3. `terraform apply`
-3. On AWS, delete the following insecure defaults:
+3. On AWS, create a defaul Admin user to allow creation of `S3 bucket` and `DynamoDB table` to store Terraform state. Store the AWS access credentials in `.env`. File `provider.tf` shows that by default `local` state is used. After an initial `terraform init && terraform plan && terraform apply`, comment out the `local` provider in `provider.tf` and uncomment the `S3` provider. Then, , delete the `main.tf` file and rename `main.second` to `main.tf`.
+4. On AWS, delete the following insecure defaults:
 
     1. Default security group: `aws ec2 delete-security-group --group-id ******`
     2. Default Network access control list (ACL): `aws ec2 delete-network-acl --network-acl-id ******`

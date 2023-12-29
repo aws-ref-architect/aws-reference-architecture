@@ -26,19 +26,3 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state_e
 resource "aws_s3_bucket_object_lock_configuration" "terraform_state_object_lock" {
   bucket = aws_s3_bucket.terraform_state.id
 }
-
-resource "aws_dynamodb_table" "terraform-lock" {
-  name           = "terraform_state"
-  read_capacity  = 5
-  write_capacity = 5
-  hash_key       = "LockID"
-
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
-
-  tags = {
-    "Environment": "global"
-  }
-}
