@@ -6,17 +6,17 @@ terraform {
     }
   }
 
-  backend "local" {
-    path = "terraform.tfstate"
-  }
-
-#  backend "s3" {
-#    bucket = "terraform-state-backend"
-#    key    = "terraform.state"
-#    region = "us-east-2"
-#    encrypt = true
-#    dynamodb_table = "terraform_state_lock"
+#  backend "local" {
+#    path = "terraform.tfstate"
 #  }
+
+  backend "s3" {
+    bucket = "reference-architecture-terraform-state"
+    key    = "terraform.state"
+    region = "us-east-2"
+    encrypt = true
+    dynamodb_table = "terraform_state_lock"
+  }
 }
 
 # Configure the AWS Provider
